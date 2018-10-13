@@ -1,0 +1,10 @@
+IsometricTest
+=============
+
+HTML5 Isometric graphics tech demo using Javascript and Javascript's Canvas.
+
+Using this tutorial: https://gamedevelopment.tutsplus.com/tutorials/creating-isometric-worlds-a-primer-for-game-developers--gamedev-6511
+
+
+Program Outline
+===============

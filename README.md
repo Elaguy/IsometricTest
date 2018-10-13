@@ -1,3 +1,3 @@
 # IsometricTest
 
-Just a basic Javascript canvas isometric tech demo.
+HTML5 Isometric graphics tech demo using Javascript and Javascript's Canvas.
