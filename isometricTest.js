@@ -28,23 +28,26 @@ var Level = function() {
 		[1, 1, 1, 1, 1, 1]
 	];
 
-	level.tileSize = 64;
+	level.tileWidth = 64;
+	level.tileHeight = 31;
 	
+	level.tile0;
 	level.tile1;
 	level.tile2;
-	level.tile3;
 	
 	level.type;
 	
+	// or: mapToScreen
 	level.cartToIso = function(pt) {
 		var tempPt = new Point(0, 0);
 		
-		tempPt.x = pt.x - pt.y;
-		tempPt.y = (pt.x + pt.y) / 2;
-		
+		tempPt.x = (pt.x - pt.y) * (level.tileWidth/2);
+		tempPt.y = (pt.x + pt.y) * (level.tileHeight/2);
+
 		return tempPt;
 	};
 	
+	// or: screenToMap
 	level.isoToCart = function(pt) {
 		var tempPt = new Point(0, 0);
 	
@@ -83,13 +86,13 @@ var App = function() {
 	
 	app.initImages = function() {
 		var sheet = new Image();
-		sheet.src = "img/tiles.png";
+		sheet.src = "img/tiles2.png";
 		
-		app.level.tile1 = new Sprite(sheet, 0, 0, app.level.tileSize, app.level.tileSize);
-		app.level.tile2 = new Sprite(sheet, 64, 0, app.level.tileSize, app.level.tileSize);
-		app.level.tile3 = new Sprite(sheet, 128, 0, app.level.tileSize, app.level.tileSize);
+		app.level.tile0 = new Sprite(sheet, 0, 0, app.level.tileWidth, app.level.tileHeight);
+		app.level.tile1 = new Sprite(sheet, 64, 0, app.level.tileWidth, app.level.tileHeight);
+		app.level.tile2 = new Sprite(sheet, 128, 0, app.level.tileWidth, app.level.tileHeight);
 		
-		app.level.type = [app.level.tile1, app.level.tile2, app.level.tile3];
+		app.level.type = [app.level.tile0, app.level.tile1, app.level.tile2];
 	}
 	
 	app.gameLoop = function() {
@@ -119,13 +122,19 @@ var App = function() {
 		for(var i = 0; i < app.level.map.length; i++) {
 			for(var j = 0; j < app.level.map[i].length; j++) {
 				var tile = app.level.type[app.level.map[i][j]];
-			
-				var x = j * app.level.tileSize + ((app.canvas.width/2) - (tile.imgW/2));
-				var y = i * app.level.tileSize;
+				
+				var offset = (app.canvas.width/2) - ((app.level.map.length * app.level.tileWidth)/2);
+				console.log(offset);
+				var x = j;
+				var y = i;
 				var isoPt = app.level.cartToIso(new Point(x, y));
 				
+				// For debugging:
+				//app.ctx.strokeStyle = "white";
+				//app.ctx.strokeRect(isoPt.x, isoPt.y, app.level.tileWidth, app.level.tileHeight);
+				
 				app.ctx.drawImage(tile.img, tile.imgX, tile.imgY,
-					tile.imgW, tile.imgH, isoPt.x, isoPt.y, app.level.tileSize, app.level.tileSize);
+					tile.imgW, tile.imgH, isoPt.x, isoPt.y, app.level.tileWidth, app.level.tileHeight);
 			}
 		}
 	};
