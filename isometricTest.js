@@ -20,12 +20,25 @@ var Level = function() {
 	var level = this;
 	
 	level.map = [
-		[1, 1, 1, 1, 1, 1],
+		[2, 1, 1, 1, 1, 2],
 		[1, 0, 0, 0, 0, 1],
 		[1, 0, 2, 2, 0, 1],
 		[1, 0, 2, 2, 0, 1],
 		[1, 0, 0, 0, 0, 1],
-		[1, 1, 1, 1, 1, 1]
+		[2, 1, 1, 1, 1, 2]
+	];
+	
+	level.map = [
+		[2, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[2, 1, 1, 1, 1, 1, 1, 1, 1, 2],
 	];
 
 	level.tileWidth = 64;
@@ -37,13 +50,20 @@ var Level = function() {
 	
 	level.type;
 	
+	level.wholeMapX;
+	level.wholeMapY;
+	level.wholeMap;
+	
 	// or: mapToScreen
 	level.cartToIso = function(pt) {
 		var tempPt = new Point(0, 0);
 		
-		tempPt.x = (pt.x - pt.y) * (level.tileWidth/2);
-		tempPt.y = (pt.x + pt.y) * (level.tileHeight/2);
-
+		var offsetX = (app.canvas.width/2) - (level.tileWidth/2);
+		var offsetY = (app.canvas.height/2) - (level.tileHeight/2) - ((app.level.map.length * level.tileHeight)/2) + (app.level.tileHeight/2);
+		
+		tempPt.x = ((pt.x - pt.y) * (level.tileWidth/2)) + offsetX;
+		tempPt.y = (pt.x + pt.y) * (level.tileHeight/2) + offsetY;
+		
 		return tempPt;
 	};
 	
@@ -81,12 +101,19 @@ var App = function() {
 	};
 	
 	app.init = function() {
+		app.initMap();
 		app.initImages();
+	}
+	
+	app.initMap = function() {
+		var tempX = app.level.cartToIso(new Point(0, 5));
+		var tempY = app.level.cartToIso(new Point(0, 0));
+		app.level.wholeMap = new Point(tempX.x, tempY.y);
 	}
 	
 	app.initImages = function() {
 		var sheet = new Image();
-		sheet.src = "img/tiles2.png";
+		sheet.src = "img/tiles.png";
 		
 		app.level.tile0 = new Sprite(sheet, 0, 0, app.level.tileWidth, app.level.tileHeight);
 		app.level.tile1 = new Sprite(sheet, 64, 0, app.level.tileWidth, app.level.tileHeight);
@@ -116,20 +143,22 @@ var App = function() {
 		app.ctx.fillRect(0, 0, app.canvas.width, app.canvas.height);
 		
 		app.drawMap();
+		
+		// for debugging:
+		//app.ctx.strokeStyle = "white";
+		//app.ctx.strokeRect(app.level.wholeMap.x, app.level.wholeMap.y, 
+		//	app.level.map[0].length * app.level.tileWidth, app.level.map.length * app.level.tileHeight);
 	};
 	
 	app.drawMap = function() {
 		for(var i = 0; i < app.level.map.length; i++) {
 			for(var j = 0; j < app.level.map[i].length; j++) {
 				var tile = app.level.type[app.level.map[i][j]];
-				
-				var offset = (app.canvas.width/2) - ((app.level.map.length * app.level.tileWidth)/2);
-				console.log(offset);
 				var x = j;
 				var y = i;
 				var isoPt = app.level.cartToIso(new Point(x, y));
 				
-				// For debugging:
+				// for debugging:
 				//app.ctx.strokeStyle = "white";
 				//app.ctx.strokeRect(isoPt.x, isoPt.y, app.level.tileWidth, app.level.tileHeight);
 				
