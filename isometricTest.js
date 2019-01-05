@@ -1,3 +1,15 @@
+/*
+	HTML5 Basic Isometric Graphics Tech Demo
+	
+	isometricTest.js - Includes rendering, maps,
+	and other important elements.
+	
+	See LICENSE.txt.
+	
+	= Includes mapIO.js =
+*/
+
+
 var Sprite = function(img, imgX, imgY, imgW, imgH) {
 	var sprite = this;
 	
@@ -20,25 +32,16 @@ var Level = function() {
 	var level = this;
 	
 	level.map = [
-		[2, 1, 1, 1, 1, 2],
-		[1, 0, 0, 0, 0, 1],
-		[1, 0, 2, 2, 0, 1],
-		[1, 0, 2, 2, 0, 1],
-		[1, 0, 0, 0, 0, 1],
-		[2, 1, 1, 1, 1, 2]
-	];
-	
-	level.map = [
-		[2, 1, 1, 1, 1, 1, 1, 1, 1, 2],
-		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[2, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+		[2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+		[2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+		[2, 2, 2, 1, 1, 1, 1, 2, 2, 2],
+		[2, 2, 2, 1, 3, 3, 1, 1, 2, 2],
+		[2, 2, 1, 1, 3, 3, 3, 1, 2, 2],
+		[2, 2, 1, 3, 3, 3, 1, 1, 2, 2],
+		[2, 2, 1, 1, 1, 3, 1, 1, 2, 2],
+		[2, 2, 2, 2, 1, 1, 1, 2, 2, 2],
+		[2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+		[2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
 	];
 
 	level.tileWidth = 64;
@@ -81,7 +84,7 @@ var Level = function() {
 var App = function() {
 	var app = this;
     app.canvas = document.getElementById("canvas");
-    app.ctx = canvas.getContext("2d");
+    app.ctx = app.canvas.getContext("2d");
 	
 	app.fps = 60; // target fps
 	app.dt;
@@ -91,6 +94,7 @@ var App = function() {
 	app.keys = [];
 	
 	app.level = new Level();
+	app.mapIO = new MapIO();
 	
 	app.run = function() {
 		app.init();
@@ -103,13 +107,15 @@ var App = function() {
 	app.init = function() {
 		app.initMap();
 		app.initImages();
-	}
+		app.mapIO.initMapLoad();
+		app.checkMapLoad();
+	};
 	
 	app.initMap = function() {
 		var tempX = app.level.cartToIso(new Point(0, 5));
 		var tempY = app.level.cartToIso(new Point(0, 0));
 		app.level.wholeMap = new Point(tempX.x, tempY.y);
-	}
+	};
 	
 	app.initImages = function() {
 		var sheet = new Image();
@@ -118,9 +124,10 @@ var App = function() {
 		app.level.tile0 = new Sprite(sheet, 0, 0, app.level.tileWidth, app.level.tileHeight);
 		app.level.tile1 = new Sprite(sheet, 64, 0, app.level.tileWidth, app.level.tileHeight);
 		app.level.tile2 = new Sprite(sheet, 128, 0, app.level.tileWidth, app.level.tileHeight);
+		app.level.tile3 = new Sprite(sheet, 192, 0, app.level.tileWidth, app.level.tileHeight);
 		
-		app.level.type = [app.level.tile0, app.level.tile1, app.level.tile2];
-	}
+		app.level.type = [app.level.tile0, app.level.tile1, app.level.tile2, app.level.tile3];
+	};
 	
 	app.gameLoop = function() {
 		var current = (new Date()).getTime();
@@ -135,7 +142,13 @@ var App = function() {
 	};
 	
 	app.update = function(dt) {
+		app.checkMapLoad();
+	};
 	
+	app.checkMapLoad = function() {
+		if(app.mapIO.mapLoaded == true) {
+			app.level.map = app.mapIO.map;
+		}
 	};
 	
 	app.draw = function() {
