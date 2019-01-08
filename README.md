@@ -2,4 +2,4 @@
 
 HTML5 Isometric graphics tech demo using Javascript and Javascript's Canvas.
 
-![Screenshot](https://github.com/Elaguy/IsometricTest/tree/master/img/defaultmap_screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/Elaguy/IsometricTest/master/img/defaultmap_screenshot.png)
