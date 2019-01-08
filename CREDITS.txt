@@ -1,0 +1,6 @@
+1. solarstrings: 
+	- https://github.com/solarstrings/SDL2-Isometric-Game-Tutorial-Part-1
+	- https://www.youtube.com/watch?v=8xf_ouTpd1c&t=8s
+	
+2. pixel32:
+	- https://opengameart.org/content/pixel-city

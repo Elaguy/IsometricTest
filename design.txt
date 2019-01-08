@@ -6,5 +6,18 @@ HTML5 Isometric graphics tech demo using Javascript and Javascript's Canvas.
 Using this tutorial: https://gamedevelopment.tutsplus.com/tutorials/creating-isometric-worlds-a-primer-for-game-developers--gamedev-6511
 
 
-Program Outline
+	 To-Do
 ===============
+(Ranked in order of priority)
+
+1. Research and implement height variance.
+(For example, so city maps can be made)
+
+2. Ability to switch between tile sets so
+number tile identification is easier to
+manage
+
+3. Research and implement Perlin Noise and
+other noise algorithms to randomly generate
+terrian and show it isometrically.
+(Something that looks like Transport Tycoon)

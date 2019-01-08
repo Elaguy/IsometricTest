@@ -9,7 +9,6 @@
 	= Includes mapIO.js =
 */
 
-
 var Sprite = function(img, imgX, imgY, imgW, imgH) {
 	var sprite = this;
 	
@@ -43,19 +42,14 @@ var Level = function() {
 		[2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
 		[2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
 	];
-
-	level.tileWidth = 64;
-	level.tileHeight = 31;
 	
 	level.tile0;
 	level.tile1;
 	level.tile2;
+	level.tile3;
+	level.tile4;
 	
 	level.type;
-	
-	level.wholeMapX;
-	level.wholeMapY;
-	level.wholeMap;
 	
 	// or: mapToScreen
 	level.cartToIso = function(pt) {
@@ -105,28 +99,25 @@ var App = function() {
 	};
 	
 	app.init = function() {
-		app.initMap();
 		app.initImages();
 		app.mapIO.initMapLoad();
 		app.checkMapLoad();
 	};
 	
-	app.initMap = function() {
-		var tempX = app.level.cartToIso(new Point(0, 5));
-		var tempY = app.level.cartToIso(new Point(0, 0));
-		app.level.wholeMap = new Point(tempX.x, tempY.y);
-	};
-	
 	app.initImages = function() {
 		var sheet = new Image();
 		sheet.src = "img/tiles.png";
+		var citySheet = new Image();
+		citySheet.src = "img/city_tiles.png";
 		
 		app.level.tile0 = new Sprite(sheet, 0, 0, app.level.tileWidth, app.level.tileHeight);
 		app.level.tile1 = new Sprite(sheet, 64, 0, app.level.tileWidth, app.level.tileHeight);
 		app.level.tile2 = new Sprite(sheet, 128, 0, app.level.tileWidth, app.level.tileHeight);
 		app.level.tile3 = new Sprite(sheet, 192, 0, app.level.tileWidth, app.level.tileHeight);
+		app.level.tile4 = new Sprite(citySheet, 0, 0, app.level.tileWidth, app.level.tileHeight*2);
 		
-		app.level.type = [app.level.tile0, app.level.tile1, app.level.tile2, app.level.tile3];
+		app.level.type = [app.level.tile0, app.level.tile1, app.level.tile2, app.level.tile3, 
+			app.level.tile4];
 	};
 	
 	app.gameLoop = function() {
@@ -185,3 +176,4 @@ var App = function() {
 var app = new App();
 
 window.onload = app.run;
+	

@@ -39,7 +39,7 @@ var MapIO = function() {
 				}
 			}
 			
-			mapIO.map = mapIO.initEmpty2DArr(mapSize);	
+			mapIO.map = mapIO.initEmpty2DArray(mapSize);	
 			
 			var i = 0;
 			for(var j = 0; j < data.length; j++) {
@@ -63,13 +63,13 @@ var MapIO = function() {
 		}
 	};
 	
-	mapIO.initEmpty2DArr = function(length) {
-		var arr = [];
+	mapIO.initEmpty2DArray = function(length) {
+		var array = [];
 		
 		for(var i = 0; i < length; i++) {
-			arr[i] = [];
+			array[i] = [];
 		}
 		
-		return arr;
+		return array;
 	}
 }
