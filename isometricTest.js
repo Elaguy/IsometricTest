@@ -43,6 +43,9 @@ var Level = function() {
 		[2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
 	];
 	
+	level.tileWidth = 64;
+	level.tileHeight = 31;
+	
 	level.tile0;
 	level.tile1;
 	level.tile2;
@@ -116,8 +119,7 @@ var App = function() {
 		app.level.tile3 = new Sprite(sheet, 192, 0, app.level.tileWidth, app.level.tileHeight);
 		app.level.tile4 = new Sprite(citySheet, 0, 0, app.level.tileWidth, app.level.tileHeight*2);
 		
-		app.level.type = [app.level.tile0, app.level.tile1, app.level.tile2, app.level.tile3, 
-			app.level.tile4];
+		app.level.type = [app.level.tile0, app.level.tile1, app.level.tile2, app.level.tile3, app.level.tile4];
 	};
 	
 	app.gameLoop = function() {
