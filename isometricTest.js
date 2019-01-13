@@ -9,6 +9,17 @@
 	= Includes mapIO.js =
 */
 
+var Tile = function(img, imgX, imgY, imgW, imgH) {
+	var tile = this;
+	
+	tile.img = img;
+	
+	tile.imgX = imgX;
+	tile.imgY = imgY;
+	tile.imgW = imgW;
+	tile.imgH = imgH;
+}
+
 var Sprite = function(img, imgX, imgY, imgW, imgH) {
 	var sprite = this;
 	
@@ -40,26 +51,34 @@ var Level = function() {
 		[2, 2, 1, 1, 1, 3, 1, 1, 2, 2],
 		[2, 2, 2, 2, 1, 1, 1, 2, 2, 2],
 		[2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
-		[2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+		[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+	];
+	
+	level.sprites = [
+		[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+		[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+		[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+		[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+		[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+		[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+		[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+		[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+		[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+		[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 	];
 	
 	level.tileWidth = 64;
 	level.tileHeight = 31;
 	
-	level.tile0;
-	level.tile1;
-	level.tile2;
-	level.tile3;
-	level.tile4;
-	
-	level.type;
+	level.tileTypes = [];
+	level.spriteTypes = [];
 	
 	// or: mapToScreen
 	level.cartToIso = function(pt) {
 		var tempPt = new Point(0, 0);
 		
 		var offsetX = (app.canvas.width/2) - (level.tileWidth/2);
-		var offsetY = (app.canvas.height/2) - (level.tileHeight/2) - ((app.level.map.length * level.tileHeight)/2) + (app.level.tileHeight/2);
+		var offsetY = (app.canvas.height/2) - (level.tileHeight/2) - ((app.level.map.length * level.tileHeight)/2) + (level.tileHeight/2);
 		
 		tempPt.x = ((pt.x - pt.y) * (level.tileWidth/2)) + offsetX;
 		tempPt.y = (pt.x + pt.y) * (level.tileHeight/2) + offsetY;
@@ -103,23 +122,25 @@ var App = function() {
 	
 	app.init = function() {
 		app.initImages();
+		app.initSprites();
 		app.mapIO.initMapLoad();
-		app.checkMapLoad();
 	};
 	
 	app.initImages = function() {
 		var sheet = new Image();
 		sheet.src = "img/tiles.png";
-		var citySheet = new Image();
-		citySheet.src = "img/city_tiles.png";
 		
-		app.level.tile0 = new Sprite(sheet, 0, 0, app.level.tileWidth, app.level.tileHeight);
-		app.level.tile1 = new Sprite(sheet, 64, 0, app.level.tileWidth, app.level.tileHeight);
-		app.level.tile2 = new Sprite(sheet, 128, 0, app.level.tileWidth, app.level.tileHeight);
-		app.level.tile3 = new Sprite(sheet, 192, 0, app.level.tileWidth, app.level.tileHeight);
-		app.level.tile4 = new Sprite(citySheet, 0, 0, app.level.tileWidth, app.level.tileHeight*2);
+		app.level.tileTypes.push(new Tile(sheet, 0, 0, app.level.tileWidth, app.level.tileHeight));
+		app.level.tileTypes.push(new Tile(sheet, 64, 0, app.level.tileWidth, app.level.tileHeight));
+		app.level.tileTypes.push(new Tile(sheet, 128, 0, app.level.tileWidth, app.level.tileHeight));
+		app.level.tileTypes.push(new Tile(sheet, 192, 0, app.level.tileWidth, app.level.tileHeight));
+	};
+	
+	app.initSprites = function() {
+		var sheet = new Image();
+		sheet.src = "img/buildings.png";
 		
-		app.level.type = [app.level.tile0, app.level.tile1, app.level.tile2, app.level.tile3, app.level.tile4];
+		app.level.spriteTypes.push(new Sprite(sheet, 0, 0, 36, 59));
 	};
 	
 	app.gameLoop = function() {
@@ -135,12 +156,37 @@ var App = function() {
 	};
 	
 	app.update = function(dt) {
-		app.checkMapLoad();
+		app.checkMapLoaded();
+		app.checkSpritesLoaded();
+		app.checkResetSprites();
 	};
 	
-	app.checkMapLoad = function() {
+	app.checkMapLoaded = function() {
 		if(app.mapIO.mapLoaded == true) {
 			app.level.map = app.mapIO.map;
+		}
+	};
+	
+	app.checkSpritesLoaded = function() {
+		if(app.mapIO.spritesLoaded == true) {
+			app.level.sprites = app.mapIO.sprites;
+		}
+	};
+	
+	app.checkResetSprites = function() {
+		if(app.mapIO.resetSprites == true) {
+			app.level.sprites = [
+				[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+				[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+				[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+				[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+				[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+				[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+				[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+				[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+				[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+				[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+			];
 		}
 	};
 	
@@ -149,6 +195,7 @@ var App = function() {
 		app.ctx.fillRect(0, 0, app.canvas.width, app.canvas.height);
 		
 		app.drawMap();
+		app.drawSprites();
 		
 		// for debugging:
 		//app.ctx.strokeStyle = "white";
@@ -159,7 +206,7 @@ var App = function() {
 	app.drawMap = function() {
 		for(var i = 0; i < app.level.map.length; i++) {
 			for(var j = 0; j < app.level.map[i].length; j++) {
-				var tile = app.level.type[app.level.map[i][j]];
+				var tile = app.level.tileTypes[app.level.map[i][j]];
 				var x = j;
 				var y = i;
 				var isoPt = app.level.cartToIso(new Point(x, y));
@@ -173,9 +220,27 @@ var App = function() {
 			}
 		}
 	};
+	
+	app.drawSprites = function() {
+		for(var i = 0; i < app.level.map.length; i++) {
+			for(var j = 0; j < app.level.map[i].length; j++) {
+				if(app.level.sprites[i][j] != -1) {
+					var sprite = app.level.spriteTypes[app.level.sprites[i][j]];
+					var x = j;
+					var y = i;
+					var isoPt = app.level.cartToIso(new Point(x, y));
+					var offsetX = (app.level.tileWidth/2) - (sprite.imgW/2);
+					var offsetY = (app.level.tileHeight/2) - (sprite.imgH/2) - (sprite.imgH * 0.339);
+				
+					app.ctx.drawImage(sprite.img, sprite.imgX, sprite.imgY,
+						sprite.imgW, sprite.imgH, isoPt.x + offsetX, isoPt.y + offsetY, sprite.imgW, sprite.imgH);
+				}
+			}
+		}
+	};
 }
 
 var app = new App();
 
 window.onload = app.run;
-	
+

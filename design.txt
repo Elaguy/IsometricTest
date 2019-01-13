@@ -10,14 +10,20 @@ Using this tutorial: https://gamedevelopment.tutsplus.com/tutorials/creating-iso
 ===============
 (Ranked in order of priority)
 
-1. Research and implement height variance.
-(For example, so city maps can be made)
-
+1. Research and implement objects on tiles
+(So city maps can be made, for example)
+	- Preferred Deadline: By end of day Thurs. 01/10/19
+	
 2. Ability to switch between tile sets so
 number tile identification is easier to
 manage
+	- Preferred Deadline: N/A
 
 3. Research and implement Perlin Noise and
 other noise algorithms to randomly generate
 terrian and show it isometrically.
 (Something that looks like Transport Tycoon)
+	- Preferred Deadline: N/A
+	
+4. [OPTIONAL] Ability to rotate the map
+	- Preferred Deadline: N/A
